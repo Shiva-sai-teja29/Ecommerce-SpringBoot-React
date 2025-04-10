@@ -3,16 +3,12 @@ package com.ecommerce.ft_ecom.controller;
 import com.ecommerce.ft_ecom.config.AppConstants;
 import com.ecommerce.ft_ecom.dtos.CategoryDTO;
 import com.ecommerce.ft_ecom.dtos.CategoryResponse;
-import com.ecommerce.ft_ecom.model.Category;
 import com.ecommerce.ft_ecom.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/")

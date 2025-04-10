@@ -3,7 +3,6 @@ package com.ecommerce.ft_ecom.controller;
 import com.ecommerce.ft_ecom.config.AppConstants;
 import com.ecommerce.ft_ecom.dtos.ProductDTO;
 import com.ecommerce.ft_ecom.dtos.ProductResponse;
-import com.ecommerce.ft_ecom.model.Product;
 import com.ecommerce.ft_ecom.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

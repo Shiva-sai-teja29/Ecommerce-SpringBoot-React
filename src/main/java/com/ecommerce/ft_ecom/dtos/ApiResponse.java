@@ -2,7 +2,6 @@ package com.ecommerce.ft_ecom.dtos;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @NoArgsConstructor
