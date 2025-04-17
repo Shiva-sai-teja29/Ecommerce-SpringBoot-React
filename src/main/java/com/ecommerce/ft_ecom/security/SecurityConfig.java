@@ -2,19 +2,17 @@ package com.ecommerce.ft_ecom.security;
 
 import com.ecommerce.ft_ecom.model.Role;
 import com.ecommerce.ft_ecom.model.Roles;
-import com.ecommerce.ft_ecom.model.User;
 import com.ecommerce.ft_ecom.repository.RoleRepository;
-import com.ecommerce.ft_ecom.repository.UserRepository;
 import com.ecommerce.ft_ecom.security.jwt.AuthEntryPoint;
 import com.ecommerce.ft_ecom.security.jwt.JwtFilter;
 import com.ecommerce.ft_ecom.security.service.UserDetailsServiceImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,8 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.Set;
 
 @EnableWebSecurity
 @Configuration
@@ -46,18 +42,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
+                .authorizeHttpRequests(request->
+                        request.requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/signup", "/api/auth/signout").permitAll()
+                                .requestMatchers("/error").permitAll()
+                                .anyRequest().authenticated())
+                .logout(logout->
+                        logout.logoutUrl("/api/auth/logout")
+                                .logoutSuccessHandler(((request, response, authentication) ->
+                                        response.setStatus(HttpServletResponse.SC_OK)))
+                                .logoutSuccessUrl("/api/auth/login?logout")
+                                .invalidateHttpSession(true)
+                                .deleteCookies("jwt")
+                                .permitAll())
                 .headers(header->
                         header.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .sessionManagement(session->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(request->
-                        request.requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .anyRequest().authenticated())
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+//                          session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                        .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception->
-                        exception.authenticationEntryPoint(authEntryPoint));
+                        exception.authenticationEntryPoint(authEntryPoint))
+                .authenticationProvider(daoAuthenticationProvider());
         return http.build();
     }
 

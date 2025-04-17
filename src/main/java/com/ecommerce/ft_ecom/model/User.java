@@ -55,6 +55,10 @@ public class User {
                 inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> role = new HashSet<>();
 
+    public Set<Role> getRole() {
+        return role != null ? role : new HashSet<>();
+    }
+
     @Getter
     @Setter
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

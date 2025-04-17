@@ -1,14 +1,20 @@
 package com.ecommerce.ft_ecom.security.response;
 
-import java.util.Date;
 import java.util.List;
 
 public class LoginResponse {
-
+    private Long id;
     private String token;
     private String username;
     private List<String> role;
-    private Date expiringIn;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getToken() {
         return token;
@@ -34,18 +40,17 @@ public class LoginResponse {
         this.role = role;
     }
 
-    public Date getExpiringIn() {
-        return expiringIn;
+
+    public LoginResponse(Long id, String username, List<String> role) {
+        this.id=id;
+        this.username = username;
+        this.role = role;
     }
 
-    public void setExpiringIn(Date expiringIn) {
-        this.expiringIn = expiringIn;
-    }
-
-    public LoginResponse(String token, String username, List<String> role, Date expiringIn) {
+    public LoginResponse(Long id, String token, String username, List<String> role) {
+        this.id=id;
         this.token = token;
         this.username = username;
         this.role = role;
-        this.expiringIn = expiringIn;
     }
 }
