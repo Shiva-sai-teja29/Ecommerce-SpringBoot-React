@@ -71,10 +71,10 @@ public class AuthController {
                 // Create JWT cookie
                 Cookie jwtCookie = new Cookie("jwt", token);
                 jwtCookie.setHttpOnly(true);
-                jwtCookie.setSecure(true); // Use only with HTTPS
+                jwtCookie.setSecure(false); // Use only with HTTPS
                 jwtCookie.setPath("/");
                 jwtCookie.setMaxAge((int) (expirationTime / 1000)); // Convert ms to seconds
-                jwtCookie.setAttribute("SameSite", "Strict");
+//                jwtCookie.setAttribute("SameSite", "Strict");
                 response.addCookie(jwtCookie);
 
                 List<String> roles = userDetailsImpl.getAuthorities().stream()
