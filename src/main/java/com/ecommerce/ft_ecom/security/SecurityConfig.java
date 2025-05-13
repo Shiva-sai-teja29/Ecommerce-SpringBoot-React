@@ -48,7 +48,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request->
                         request.requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/api/auth/login", "/api/auth/signup", "/api/auth/signout").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/signup",
+                                        "/api/auth/signout", "/api/public/**", "/images/**").permitAll()
                                 .requestMatchers("/error").permitAll()
                                 .anyRequest().authenticated())
                 .logout(logout->

@@ -44,6 +44,9 @@ public class ProductServiceImpl implements ProductService{
     @Value("${project.images}")
     private String path;
 
+    @Value("${image.base.url}")
+    private String imageBaseUrl;
+
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
@@ -79,7 +82,11 @@ public class ProductServiceImpl implements ProductService{
         List<Product> product = product2.getContent();
         if (product.isEmpty()) throw new APIException("Product not exists");
         List<ProductDTO> productDTO = product.stream()
-                .map(product1 -> modelMapper.map(product1, ProductDTO.class))
+                .map(product1 -> {
+                    ProductDTO productDTO1 = modelMapper.map(product1, ProductDTO.class);
+                    productDTO1.setImage(constructImageUrl(product1.getImage()));
+                    return productDTO1;
+                })
                 .toList();
         ProductResponse productResponse = new ProductResponse();
         productResponse.setResponse(productDTO);
@@ -89,6 +96,10 @@ public class ProductServiceImpl implements ProductService{
         productResponse.setPageSize(product2.getSize());
         productResponse.setLastPage(product2.isLast());
         return productResponse;
+    }
+
+    public String constructImageUrl(String imageName){
+        return imageBaseUrl.endsWith("/") ? imageBaseUrl+imageName : imageBaseUrl+"/"+imageName;
     }
 
     @Override
